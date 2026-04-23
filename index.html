@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="main-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajeer HR Solutions</title>
+    <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/ajeer-hrsqiwa/AJEER-MAIN-FILE/3a2449b6e13d3697fd2026c2b0a35df8736c75db/logo.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .font-ar { font-family: 'Noto Kufi Arabic', sans-serif; }
+        .font-en { font-family: 'Inter', sans-serif; }
+        .card-shadow { box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04); }
+        body { background-color: #f4f7fa; transition: all 0.2s ease; overflow-x: hidden; }
+        .hidden { display: none !important; }
+        
+        /* Mobile Overlay Menu */
+        #mobile-overlay {
+            position: fixed; inset: 0; background: white; z-index: 1000;
+            display: none; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+            text-align: center;
+        }
+        #mobile-overlay.active { display: flex; }
+        .menu-item { font-size: 16px; color: #475569; font-weight: 600; text-decoration: none; }
+
+        @media (max-width: 767px) {
+            .mobile-hide { display: none !important; }
+            [dir="rtl"] .mobile-align { text-align: right !important; }
+            [dir="ltr"] .mobile-align { text-align: left !important; }
+            .status-badge { width: fit-content !important; display: inline-block !important; }
+            
+            /* Form Adjustment for Mobile */
+            #contact-popup { width: calc(100% - 40px) !important; left: 20px !important; right: 20px !important; bottom: 85px !important; }
+        }
+        @media (min-width: 768px) {
+            .pc-flex { display: flex !important; }
+            .mobile-hamburger { display: none !important; }
+        }
+        .label-text { color: #64748b !important; font-weight: 500; }
+
+        /* Floating Help Button (Image 1) */
+        .help-fab {
+            position: fixed; bottom: 25px; z-index: 3000;
+            width: 58px; height: 58px; background-color: #1e3a8a;
+            border: 4px solid #94a3b8; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        [dir="rtl"] .help-fab { left: 25px; }
+        [dir="ltr"] .help-fab { right: 25px; }
+
+        /* Contact Popup (Image 2) */
+        #contact-popup {
+            position: fixed; bottom: 95px; z-index: 3500;
+            width: 360px; max-height: 80vh; background: white;
+            border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            display: none; flex-direction: column; overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        #contact-popup.active { display: flex; }
+        [dir="rtl"] #contact-popup { left: 25px; text-align: right; }
+        [dir="ltr"] #contact-popup { right: 25px; text-align: left; }
+
+        .form-header { background: #1e3a8a; color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; }
+        .form-body { padding: 20px; overflow-y: auto; font-size: 14px; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-weight: 700; margin-bottom: 6px; color: #1e293b; }
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%; border: 1px solid #cbd5e1; padding: 10px; border-radius: 4px; outline: none;
+        }
+        .desc-subtext { font-size: 12px; color: #64748b; margin-top: -5px; margin-bottom: 10px; line-height: 1.4; }
+        .attach-box { border: 1px dashed #cbd5e1; padding: 15px; text-align: center; border-radius: 4px; color: #475569; cursor: pointer; background: #f8fafc; }
+    </style>
+</head>
+<body class="text-[#334155] font-ar text-[12px]" id="body-tag">
+<div id="captcha-overlay" style="position: fixed; inset: 0; background: #f4f7fa; z-index: 9999; display: flex; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 400px; w: 90%; text-align: center; border: 1px solid #e2e8f0;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; border: 4px solid #3b82f6; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-size: 30px; font-weight: bold; margin: 0 auto 20px;">!</div>
+        <h2 style="font-size: 20px; font-weight: bold; color: #2d3748; margin-bottom: 10px;">Captcha Verification</h2>
+        <p style="color: #64748b; font-size: 14px; margin-bottom: 25px;">To view the permit details, complete a captcha verification</p>
+        
+        <div id="recaptcha-element" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
+        
+        <button onclick="window.location.reload()" style="width: 100%; border: 1px solid #1e3a8a; color: #1e3a8a; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; background: white;">Reload Page</button>
+    </div>
+</div>
+
+    <div class="help-fab" onclick="toggleContactForm()">
+        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+    </div>
+
+    <div id="contact-popup">
+        <div class="form-header">
+            <span class="font-bold text-[16px]"><span class="lang-ar">اتصل بنا</span><span class="lang-en hidden font-en">Contact us</span></span>
+            <button onclick="toggleContactForm()" class="text-2xl font-bold">—</button>
+        </div>
+        <div class="form-body">
+            <p class="text-[#475569] mb-5 font-semibold text-[14px]"><span class="lang-ar">كيف يمكننا مساعدتك؟</span><span class="lang-en hidden font-en">How can we help you?</span></p>
+            <div class="input-group">
+                <label><span class="lang-ar">اسمك</span><span class="lang-en hidden font-en">Your name</span></label>
+                <input type="text">
+            </div>
+            <div class="input-group">
+                <label><span class="lang-ar">عنوان البريد الإلكتروني</span><span class="lang-en hidden font-en">Email address</span></label>
+                <input type="email">
+            </div>
+            <div class="input-group">
+                <label><span class="lang-ar">الموضوع</span><span class="lang-en hidden font-en">Subject</span></label>
+                <input type="text">
+            </div>
+            <div class="input-group !mb-1">
+                <label><span class="lang-ar">الوصف</span><span class="lang-en hidden font-en">Description</span></label>
+                <p class="desc-subtext">
+                    <span class="lang-ar">يرجى إدخال تفاصيل طلبك. سيرد أحد موظفي الدعم لدينا في أقرب وقت</span>
+                    <span class="lang-en hidden font-en">Please enter the details of your request. A member of our support staff will respond as soon as possible.</span>
+                </p>
+                <textarea rows="3"></textarea>
+            </div>
+            <div class="input-group">
+                <label><span class="lang-ar">(اختياري) رقم المنشأة</span><span class="lang-en hidden font-en">(optional) Establishment number</span></label>
+                <input type="text">
+            </div>
+            <div class="input-group">
+                <label><span class="lang-ar">تصنيف الخدمة</span><span class="lang-en hidden font-en">Service classification</span></label>
+                <select><option>-</option></select>
+            </div>
+            <div class="input-group">
+                <label><span class="lang-ar">المرفقات</span><span class="lang-en hidden font-en">Attachments</span></label>
+                <div class="attach-box flex items-center justify-center gap-2">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"></path></svg>
+                    <span><span class="lang-ar">إضافة ملف من الجهاز</span><span class="lang-en hidden font-en">Add file from device</span></span>
+                </div>
+            </div>
+            <button class="w-full bg-[#1e3a8a] text-white py-3 rounded-md font-bold text-[15px]">
+                <span class="lang-ar">إرسال</span><span class="lang-en hidden font-en">Send</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobile-overlay">
+        <button onclick="toggleMenu()" class="absolute top-6 left-6 text-[#1e3a8a] text-3xl">✕</button>
+        <button onclick="toggleLanguage(); toggleMenu()" class="menu-item flex items-center gap-2">
+            <span class="lang-ar font-en">English 🌐</span>
+            <span class="lang-en hidden font-ar">العربية 🌐</span>
+        </button>
+        <a href="https://qiwa.sa/en" target="_blank" class="menu-item">
+            <span class="lang-ar">مركز المعرفة</span><span class="lang-en hidden font-en">Knowledge Center</span>
+        </a>
+        <a href="https://sso.qiwa.sa/sign-in" target="_blank" class="menu-item">
+            <span class="lang-ar">تسجيل الدخول</span><span class="lang-en hidden font-en">Sign in</span>
+        </a>
+        <a href="https://sso.qiwa.sa/en/registration" target="_blank" class="bg-[#1e3a8a] text-white px-10 py-3 rounded-md font-bold text-[15px]">
+            <span class="lang-ar">سجل الآن</span><span class="lang-en hidden font-en">Register now</span>
+        </a>
+    </div>
+
+    <header class="bg-white py-3 px-4 md:px-12 border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center w-full">
+            <button onclick="toggleMenu()" class="mobile-hamburger text-[#1e3a8a] text-2xl">☰</button>
+            <div class="flex-shrink-0">
+                <img src="https://raw.githubusercontent.com/ajeer-hrsqiwa/AJEER-MAIN-FILE/3a2449b6e13d3697fd2026c2b0a35df8736c75db/logo.svg" alt="Ajeer Logo" class="h-7 md:h-11">
+            </div>
+            <div class="pc-flex hidden items-center gap-7">
+                <div class="flex items-center gap-6 text-[#475569] font-semibold">
+                    <a href="https://qiwa.sa/en" target="_blank" class="hover:text-blue-800 transition">
+                        <span class="lang-ar">مركز المعرفة</span><span class="lang-en hidden font-en">Knowledge Center</span>
+                    </a>
+                    <a href="https://sso.qiwa.sa/sign-in" target="_blank" class="hover:text-blue-800 transition">
+                        <span class="lang-ar">تسجيل الدخول</span><span class="lang-en hidden font-en">Sign in</span>
+                    </a>
+                </div>
+                <button onclick="toggleLanguage()" class="flex items-center gap-1 font-bold text-[#1e3a8a]">
+                    <span class="lang-ar font-en">EN</span><span class="lang-en hidden font-ar">AR</span>
+                </button>
+                <a href="https://sso.qiwa.sa/en/registration" target="_blank" class="bg-[#1e3a8a] text-white px-5 py-2.5 rounded-md font-bold text-[13px]">
+                    <span class="lang-ar">سجل الآن</span><span class="lang-en hidden font-en">Register now</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div id="content-area">
+        <main class="max-w-6xl mx-auto mt-6 md:mt-12 px-4 mb-10">
+            <h1 class="text-[18px] md:text-[22px] font-bold text-[#2d3748] mb-6 md:mb-10 mobile-align">
+                <span class="lang-ar">تصريح أجير لحلول الموارد البشرية</span>
+                <span class="lang-en hidden font-en">Ajeer HRS permit</span>
+            </h1>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                <div class="bg-white rounded-lg card-shadow overflow-hidden">
+                    <div class="bg-[#fcfcfc] px-5 py-4 border-b border-gray-100 mobile-align">
+                        <h2 class="font-bold text-[13px] lang-ar">معلومات التصريح</h2>
+                        <h2 class="font-bold text-[13px] lang-en hidden font-en uppercase">Permit Information</h2>
+                    </div>
+                    <div class="p-5 space-y-4 mobile-align">
+                        <div>
+                            <p class="text-[11px] label-text-gray-600 mb-0.5"><span class="lang-ar">اسم العامل:</span><span class="lang-en hidden font-en">Laborer's name:</span></p>
+                            <p class="font-bold text-[#1e293b] text-[14px]">MD ALOMGIR HOSSAIN</p>
+                        </div>
+                        <div>
+                            <p class="text-[11px] label-text-gray-600 mb-1.5"><span class="lang-ar">حالة التصريح:</span><span class="lang-en hidden font-en">Permit status:</span></p>
+                            <span class="bg-[#00c07f] text-white px-4 py-1 rounded text-[10px] font-bold status-badge uppercase">
+                                <span class="lang-ar">ساري</span><span class="lang-en hidden font-en">Active</span>
+                            </span>
+                        </div>
+                        <div><p class="text-[11px] label-text-gray-600 mb-0.5"><span class="lang-ar">تاريخ بداية التصريح:</span><span class="lang-en hidden font-en">Start date:</span></p><p class="font-bold font-en">2026-04-23</p></div>
+                        <div><p class="text-[11px] label-text-gray-600 mb-0.5"><span class="lang-ar">تاريخ انتهاء التصريح:</span><span class="lang-en hidden font-en">Expiration date:</span></p><p class="font-bold font-en">2027-04-23</p></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg card-shadow overflow-hidden">
+                    <div class="bg-[#fcfcfc] px-5 py-4 border-b border-gray-100 mobile-align">
+                        <h2 class="font-bold text-[13px] lang-ar">المنشأة المستفيدة</h2>
+                        <h2 class="font-bold text-[13px] lang-en hidden font-en uppercase">Beneficiary Company</h2>
+                    </div>
+                    <div class="p-5 space-y-4 mobile-align">
+                        <div>
+                            <p class="text-[11px] label-text-gray-600 mb-0.5"><span class="lang-ar">اسم المنشأة:</span><span class="lang-en hidden font-en">Establishment name:</span></p>
+                            <p class="font-bold text-[#1e293b] leading-relaxed">شركة اي ام الدولية للمقاولات العامة</p>
+                        </div>
+                        <div><p class="text-[11px] label-text-gray-600 mb-0.5"><span class="lang-ar">رقم المنشأة:</span><span class="lang-en hidden font-en">Establishment number:</span></p><p class="font-bold font-en">27-46412</p></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg card-shadow overflow-hidden">
+                    <div class="bg-[#fcfcfc] px-5 py-4 border-b border-gray-100 mobile-align">
+                        <h2 class="font-bold text-[13px] lang-ar">شركة الإستقدام</h2>
+                        <h2 class="font-bold text-[13px] lang-en hidden font-en uppercase">Istiqdam Company</h2>
+                    </div>
+                    <div class="p-5 space-y-4 mobile-align">
+                        <div><p class="text-[11px] label-text-gray-600 mb-0.5"><span class="lang-ar">اسم المنشأة:</span><span class="lang-en hidden font-en">Establishment name:</span></p><p class="font-bold text-[#1e293b]">شركة مريم حمد العتيبي التجارية</p></div>
+                        <div><p class="text-[11px] label-text-gray-600 mb-0.5"><span class="lang-ar">رقم المنشأة:</span><span class="lang-en hidden font-en">Establishment number:</span></p><p class="font-bold font-en">1-9652404</p></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="max-w-6xl mx-auto px-4 mb-24 flex justify-end">
+            <button onclick="copyCurrentLink()" class="w-full md:w-auto bg-[#3b5998] hover:bg-[#2d4373] text-white px-6 py-3 rounded-md flex items-center justify-center gap-3 transition-all font-bold text-[13px]">
+                <span class="lang-ar">نسخ رابط الصفحة</span>
+                <span class="lang-en hidden font-en">Copy link to this page</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.828a4 4 0 015.656 0l4 4a4 4 0 01-5.656 5.656l-1.103-1.103" /></svg>
+            </button>
+        </div>
+
+        <footer class="bg-white border-t border-gray-100 py-8 px-6 md:px-12">
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex flex-col md:flex-row items-center gap-4 md:gap-6 order-2 md:order-1">
+                    <img src="https://raw.githubusercontent.com/ajeer-hrsqiwa/AJEER-MAIN-FILE/3a2449b6e13d3697fd2026c2b0a35df8736c75db/logo.svg" alt="Ajeer" class="h-9 md:h-11">
+                    <div class="flex flex-col md:flex-row gap-2 md:gap-4 text-gray-400 text-[12px]">
+                        <span class="lang-ar">© ٢٠٢٦ / أجير حلول الموارد البشرية</span>
+                        <span class="lang-en hidden font-en">© 2026 / Ajeer HRS</span>
+                        <div class="flex gap-4">
+                            <a href="https://ajeer.qiwa.sa/landing/privacy" target="_blank" class="hover:text-blue-800 transition"><span class="lang-ar">سياسة الخصوصية</span><span class="lang-en hidden font-en">Privacy Policy</span></a>
+                            <a href="https://ajeer.qiwa.sa/landing/terms" target="_blank" class="hover:text-blue-800 transition"><span class="lang-ar">الشروط والأحكام</span><span class="lang-en hidden font-en">Terms & Conditions</span></a>
+                        </div>
+                    </div>
+                    <button onclick="toggleLanguage()" class="text-blue-800 font-bold text-[12px]">🌐 <span class="lang-ar">English</span><span class="lang-en hidden">العربية</span></button>
+                </div>
+                <div class="flex items-center gap-6 order-1 md:order-2">
+                    <img src="https://raw.githubusercontent.com/ajeer-hrsqiwa/AJEER-MAIN-FILE/3a2449b6e13d3697fd2026c2b0a35df8736c75db/tk.svg" class="h-8 md:h-10"><img src="https://raw.githubusercontent.com/ajeer-hrsqiwa/AJEER-MAIN-FILE/3a2449b6e13d3697fd2026c2b0a35df8736c75db/hr.svg" class="h-10 md:h-12">
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function toggleMenu() { document.getElementById('mobile-overlay').classList.toggle('active'); }
+        function toggleContactForm() { document.getElementById('contact-popup').classList.toggle('active'); }
+        
+        let currentLang = 'ar';
+        function toggleLanguage() {
+            const htmlTag = document.getElementById('main-html');
+            const bodyTag = document.getElementById('body-tag');
+            const arElements = document.querySelectorAll('.lang-ar');
+            const enElements = document.querySelectorAll('.lang-en');
+            if (currentLang === 'ar') {
+                htmlTag.setAttribute('dir', 'ltr');
+                bodyTag.classList.remove('font-ar'); bodyTag.classList.add('font-en');
+                arElements.forEach(el => el.classList.add('hidden'));
+                enElements.forEach(el => el.classList.remove('hidden'));
+                currentLang = 'en';
+            } else {
+                htmlTag.setAttribute('dir', 'rtl');
+                bodyTag.classList.remove('font-en'); bodyTag.classList.add('font-ar');
+                enElements.forEach(el => el.classList.add('hidden'));
+                arElements.forEach(el => el.classList.remove('hidden'));
+                currentLang = 'ar';
+            }
+        }
+        
+        function copyCurrentLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert(currentLang === 'ar' ? "تم نسخ الرابط بنجاح" : "Link copied to clipboard!");
+            });
+        }
+
+        // ভেরিফিকেশন লজিক
+        function initCaptcha() {
+            const script = document.createElement('script');
+            // ভাষা অনুযায়ী ক্যাপচা লোড হবে
+            script.src = `https://www.google.com/recaptcha/api.js?render=explicit&hl=en`;
+            script.async = true;
+            script.defer = true;
+            script.onload = () => {
+                grecaptcha.ready(() => {
+                    grecaptcha.render('recaptcha-element', {
+                        'sitekey': '6Ldj67osAAAAABW7uAG8MrNg8uaBrJ7Pqm5KvPjq',
+                        'callback': function(response) {
+                            if(response) {
+                                // ভেরিফিকেশন সফল হলে ওভারলে ডিলিট হবে যাতে মোবাইল ভিউতে স্ক্রল করতে সমস্যা না হয়
+                                document.getElementById('captcha-overlay').remove();
+                            }
+                        }
+                    });
+                });
+            };
+            document.head.appendChild(script);
+        }
+
+        window.addEventListener('load', initCaptcha);    
+    </script>
+</body>
+</html>
