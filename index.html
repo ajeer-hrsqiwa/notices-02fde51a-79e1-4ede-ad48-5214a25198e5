@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajeer HR Solutions</title>
-    <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/ajeer-hrsqiwa/AJEER-MAIN-FILE/3a2449b6e13d3697fd2026c2b0a35df8736c75db/logo.svg">
+    <title id="page-title">أجير حلول الموارد البشرية</title> <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/ajeer-hrsqiwa/AJEER-MAIN-FILE/3a2449b6e13d3697fd2026c2b0a35df8736c75db/logo.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -38,7 +37,7 @@
         }
         .label-text { color: #64748b !important; font-weight: 500; }
 
-        /* Floating Help Button (Image 1) */
+        /* Floating Help Button */
         .help-fab {
             position: fixed; bottom: 25px; z-index: 3000;
             width: 58px; height: 58px; background-color: #1e3a8a;
@@ -49,7 +48,7 @@
         [dir="rtl"] .help-fab { left: 25px; }
         [dir="ltr"] .help-fab { right: 25px; }
 
-        /* Contact Popup (Image 2) */
+        /* Contact Popup */
         #contact-popup {
             position: fixed; bottom: 95px; z-index: 3500;
             width: 360px; max-height: 80vh; background: white;
@@ -73,17 +72,16 @@
     </style>
 </head>
 <body class="text-[#334155] font-ar text-[12px]" id="body-tag">
-<div id="captcha-overlay" style="position: fixed; inset: 0; background: #f4f7fa; z-index: 9999; display: flex; align-items: center; justify-content: center;">
-    <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 400px; w: 90%; text-align: center; border: 1px solid #e2e8f0;">
-        <div style="width: 60px; height: 60px; border-radius: 50%; border: 4px solid #3b82f6; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-size: 30px; font-weight: bold; margin: 0 auto 20px;">!</div>
-        <h2 style="font-size: 20px; font-weight: bold; color: #2d3748; margin-bottom: 10px;">Captcha Verification</h2>
-        <p style="color: #64748b; font-size: 14px; margin-bottom: 25px;">To view the permit details, complete a captcha verification</p>
-        
-        <div id="recaptcha-element" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
-        
-        <button onclick="window.location.reload()" style="width: 100%; border: 1px solid #1e3a8a; color: #1e3a8a; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; background: white;">Reload Page</button>
+
+    <div id="captcha-overlay" style="position: fixed; inset: 0; background: #f4f7fa; z-index: 9999; display: flex; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 400px; width: 90%; text-align: center; border: 1px solid #e2e8f0;">
+            <div style="width: 60px; height: 60px; border-radius: 50%; border: 4px solid #3b82f6; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-size: 30px; font-weight: bold; margin: 0 auto 20px;">!</div>
+            <h2 style="font-size: 20px; font-weight: bold; color: #2d3748; margin-bottom: 10px;">Captcha Verification</h2>
+            <p style="color: #64748b; font-size: 14px; margin-bottom: 25px;">To view the permit details, complete a captcha verification</p>
+            <div id="recaptcha-element" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
+            <button onclick="window.location.reload()" style="width: 100%; border: 1px solid #1e3a8a; color: #1e3a8a; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; background: white;">Reload Page</button>
+        </div>
     </div>
-</div>
 
     <div class="help-fab" onclick="toggleContactForm()">
         <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
@@ -274,17 +272,26 @@
             const bodyTag = document.getElementById('body-tag');
             const arElements = document.querySelectorAll('.lang-ar');
             const enElements = document.querySelectorAll('.lang-en');
+            
             if (currentLang === 'ar') {
                 htmlTag.setAttribute('dir', 'ltr');
                 bodyTag.classList.remove('font-ar'); bodyTag.classList.add('font-en');
                 arElements.forEach(el => el.classList.add('hidden'));
                 enElements.forEach(el => el.classList.remove('hidden'));
+                
+                // টাইটেল ইংলিশ করা হলো
+                document.title = "Ajeer HR Solutions"; 
+                
                 currentLang = 'en';
             } else {
                 htmlTag.setAttribute('dir', 'rtl');
                 bodyTag.classList.remove('font-en'); bodyTag.classList.add('font-ar');
                 enElements.forEach(el => el.classList.add('hidden'));
                 arElements.forEach(el => el.classList.remove('hidden'));
+                
+                // টাইটেল আরবি করা হলো
+                document.title = "أجير حلول الموارد البشرية"; 
+                
                 currentLang = 'ar';
             }
         }
@@ -298,7 +305,6 @@
         // ভেরিফিকেশন লজিক
         function initCaptcha() {
             const script = document.createElement('script');
-            // ভাষা অনুযায়ী ক্যাপচা লোড হবে
             script.src = `https://www.google.com/recaptcha/api.js?render=explicit&hl=en`;
             script.async = true;
             script.defer = true;
@@ -308,7 +314,6 @@
                         'sitekey': '6Ldj67osAAAAABW7uAG8MrNg8uaBrJ7Pqm5KvPjq',
                         'callback': function(response) {
                             if(response) {
-                                // ভেরিফিকেশন সফল হলে ওভারলে ডিলিট হবে যাতে মোবাইল ভিউতে স্ক্রল করতে সমস্যা না হয়
                                 document.getElementById('captcha-overlay').remove();
                             }
                         }
